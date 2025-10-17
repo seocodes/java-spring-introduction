@@ -1,6 +1,7 @@
 package br.com.seocodes.task_manager.user;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -8,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 // controller = componente que vai ser uma camada entre a requisição e as demais camadas (service, repository etc)
 // recebe a requisição do usuário - primeira camada de acesso
 public class UserController {
+
+    @Autowired  // Spring inicializa e gerencia o ciclo de vida do repository
+    private UserRepository userRepository;
 
     /*
     * MÉTODOS DE ACESSO DO HTTP
@@ -23,7 +27,8 @@ public class UserController {
     @PostMapping("/")
     // @RequestBody para indiicar que o parâmetro (UserModel user) vai ser preenchido com os dados que vem no corpo da req
     // O Spring converte o corpo da requisição (normalmente JSON) em um objeto UserModel
-    public void create(@RequestBody UserModel user){
-        System.out.println(user.getName());
+    public UserModel create(@RequestBody UserModel user){
+        var userCreated = userRepository.save(user);
+        return userCreated;  //envia pro Insomnia a "preview" do userModel criado (com atributos ID e createdAt também)
     }
 }
