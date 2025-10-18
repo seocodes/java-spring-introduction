@@ -1,6 +1,7 @@
 package br.com.seocodes.task_manager.user;
 
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,13 @@ public class UserController {
             //MENSAGEM DE ERRO NO BODY E STATUS CODE DE ERRO
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe!");
         }
+
+        var passwordHash = BCrypt.withDefaults()
+                //toCharArray porque esse metodo recebe como parâmetros um int de força e um array de char (char[])
+                .hashToString(12, userModel.getPassword().toCharArray());
+
+        userModel.setPassword(passwordHash);
+
         var userCreated = userRepository.save(userModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
     }
