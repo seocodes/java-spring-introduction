@@ -22,6 +22,7 @@ public class UserModel {
 
     // define que a coluna correspondente ao campo username no banco vai ser "usuario"
     //@Column(name = "usuario")
+    @Column(unique=true) // constraint/restrição que define ser um atributo único, não pode iguais.
     private String username;
 
     private String name;
