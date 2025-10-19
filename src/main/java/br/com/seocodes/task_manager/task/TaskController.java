@@ -4,11 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,11 +18,28 @@ public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
 
+    @GetMapping("/")
+    public List<TaskModel> listTasks(HttpServletRequest request){
+        var idUser = request.getAttribute("idUser");
+        return taskRepository.findByIdUser((UUID) idUser);
+    }
+
     @PostMapping("/")
     // O HttpServletRequest é pra pegar o ID que ele setta de atrib. lá no filter
     public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request){
         System.out.println("Chegou no controller"); // Só pra mostrar que passa no Filter antes do Controller
         var idUser = request.getAttribute("idUser");
+
+        // Validação de data
+        var currentDate = LocalDateTime.now();
+        if(currentDate.isAfter(taskModel.getStartAt()) || currentDate.isAfter(taskModel.getEndAt())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("As datas de início/conclusão devem ser APÓS a data atual!");
+        }
+
+        if(taskModel.getStartAt().isAfter(taskModel.getEndAt())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de início deve ser menor do que a data de término");
+        }
+
         taskModel.setIdUser((UUID) idUser);
         var taskCreated = taskRepository.save(taskModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskCreated);
