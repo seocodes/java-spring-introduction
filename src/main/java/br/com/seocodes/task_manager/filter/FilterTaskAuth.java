@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Base64;
 
-// define a clase como um Bean para o Spring gerenciar o ciclo de vida via Inversion of Control (IoC)
+// define a classe como um Bean para o Spring gerenciar o ciclo de vida via Inversion of Control (IoC)
 @Component
 public class FilterTaskAuth extends OncePerRequestFilter {
 
@@ -53,6 +53,9 @@ public class FilterTaskAuth extends OncePerRequestFilter {
                 // Validar senha
                 var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
                 if(passwordVerify.verified){
+                    // Pra passar o ID daqui pro controller ao invés de ter que mandar o ID na requisição também
+                    request.setAttribute("idUser", user.getId());
+
                     // Segue viagem
                     filterChain.doFilter(request, response);
                 }
