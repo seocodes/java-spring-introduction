@@ -18,12 +18,6 @@ public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
 
-    @GetMapping("/")
-    public List<TaskModel> listTasks(HttpServletRequest request){
-        var idUser = request.getAttribute("idUser");
-        return taskRepository.findByIdUser((UUID) idUser);
-    }
-
     @PostMapping("/")
     // O HttpServletRequest é pra pegar o ID que ele setta de atrib. lá no filter
     public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request){
@@ -43,5 +37,22 @@ public class TaskController {
         taskModel.setIdUser((UUID) idUser);
         var taskCreated = taskRepository.save(taskModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskCreated);
+
+    }
+
+    @GetMapping("/")
+    public List<TaskModel> listTasks(HttpServletRequest request){
+        var idUser = request.getAttribute("idUser");
+        return taskRepository.findByIdUser((UUID) idUser);
+    }
+
+    // /tasks/589439-abshgfdsa-43222 -> id, variável no path/dentro da rota
+    // no Spring, usamos o @PathVariable para pegar essa variável/informação do path
+    @PutMapping("/{id}")  // nome da variável que vamos receber - {id} é um parâmetro, o @PathVariable vai substituí-lo pelo o que vai estar no path
+    public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
+        var idUser = request.getAttribute("idUser");
+        taskModel.setIdUser((UUID) idUser);
+        taskModel.setId(id);
+        return taskRepository.save(taskModel);
     }
 }
