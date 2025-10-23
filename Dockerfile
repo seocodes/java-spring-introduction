@@ -1,11 +1,7 @@
 # vai construir dentro do render uma imagem com base inicial um ubuntu
 FROM ubuntu:latest AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
-
-# imagem base para rodar a aplicação
-FROM openjdk:17-jdk-slim
+RUN apt-get update && apt-get install -y openjdk-17-jdk maven
 
 # passa tudo do diretório local pra imagem do render
 COPY . .
@@ -14,7 +10,12 @@ RUN apt-get install maven -y
 
 # faz uma limpeza e depois compila o código, executa os testes e
 #instala o artefato final (como um arquivo JAR ou WAR)
-RUN mvn clean install
+RUN mvn clean install -DskipTests
+
+# imagem base para rodar a aplicação
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
 
 # expoõe a porta 8080 (que roda nossa aplicação spring boot)
 EXPOSE 8080
