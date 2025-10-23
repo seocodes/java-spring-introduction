@@ -28,4 +28,13 @@ public class TaskModel {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    // Passa a responsabilidade de lançar exceção para quem usar o setTitle (normalmente o local onde se setta um title faria um try-catch)
+    // porém, não da pra fazer try-catch direto no Controller porque o @RequestBody que cuida disso, então fica mais complexo
+    public void setTitle(String title) throws Exception{
+        if(title.length() > 50){
+            throw new Exception("O campo título deve conter no máximo 50 caracteres.");
+        }
+        this.title = title;
+    }
 }
