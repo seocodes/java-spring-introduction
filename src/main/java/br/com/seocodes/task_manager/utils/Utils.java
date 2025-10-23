@@ -12,7 +12,9 @@ public class Utils {
 
     // source: o objeto de origem, de onde os valores são copiados.
     // target: o objeto de destino, que vai ser atualizado com os valores do source.
-    public void copyNonNullProperties(Object source, Object target){
+
+    //obs: os métodos são static pra gente não precisar instanciar essa classe para poder usar os métodos
+    public static void copyNonNullProperties(Object source, Object target){
 
         // copia todas as propriedades com o mesmo nome e tipo, exceto as listadas em ignoreProperties (terceiro parametro)
         // OU SEJA, aquele último parâmetro (getNull) são as propriedades a serem IGNORADAS!!!!
@@ -21,7 +23,7 @@ public class Utils {
     }
 
     // Pra auxiliar no PUT das tasks - pega todas as propriedades NULAS
-    public String[] getNullPropertyNames(Object source) {
+    public static String[] getNullPropertyNames(Object source) {
         // BeanWrapper = interface que permite  manipular propriedades de um objeto Java (conhecido como bean) de forma padronizada e simplificada
         // BeanWrapperImpl = implementação concreta do BeanWrapper (que é uma interface)
         final BeanWrapper src = new BeanWrapperImpl(source);

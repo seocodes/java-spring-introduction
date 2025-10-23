@@ -54,6 +54,9 @@ public class TaskController {
     @PutMapping("/{id}")  // {id} é um parâmetro, o @PathVariable vai substituí-lo pelo o que vai estar no path
     public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
         var idUser = request.getAttribute("idUser");
+
+        var task = taskRepository.findById(id);
+
         taskModel.setIdUser((UUID) idUser);
         taskModel.setId(id);
         return taskRepository.save(taskModel);
