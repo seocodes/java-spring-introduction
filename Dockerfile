@@ -4,6 +4,9 @@ FROM ubuntu:latest AS build
 RUN apt-get update
 RUN apt-get install openjdk-17-jdk -y
 
+# imagem base para rodar a aplicação
+FROM openjdk:17-jdk-slim
+
 # passa tudo do diretório local pra imagem do render
 COPY . .
 
