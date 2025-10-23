@@ -53,17 +53,28 @@ public class TaskController {
     // /tasks/589439-abshgfdsa-43222 -> id, variável no path/dentro da rota
     // no Spring, usamos o @PathVariable para pegar essa variável/informação do path
     @PutMapping("/{id}")  // {id} é um parâmetro, o @PathVariable vai substituí-lo pelo o que vai estar no path
-    public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
+    public ResponseEntity update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
         var idUser = request.getAttribute("idUser");
 
+        // Pega as info da task que queremos mudar no banco
         var task = taskRepository.findById(id).orElse(null);
+
+        if (task == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Tarefa não encontrada.");
+        }
+
+        if (!task.getIdUser().equals(idUser)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuário não tem permissão para alterar essa tarefa!");
+        }
 
         // basicamente vai copiar as propriedades não nulas (nesse caso, o que passarmos lá no body da requisição/o que queremos atualizar)
         // e de resto, deixa como está no banco, pq vai ignorar as propriedades nulas (ver o Utils para entender melhor)
         // propriedades nulas que me refiro: tudo aquilo que não passarmos na requisição mas existir num taskModel normal
         Utils.copyNonNullProperties(taskModel, task);
 
-        return taskRepository.save(task);
+        return ResponseEntity.ok().body(taskRepository.save(task));
 
     }
 }
