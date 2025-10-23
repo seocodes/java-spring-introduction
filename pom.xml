@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.seocodes</groupId>
 	<artifactId>task-manager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>task-manager</name>
 	<description>Task Manager</description>
 	<url/>
@@ -80,8 +80,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
-
 		</plugins>
 	</build>
 </project>
