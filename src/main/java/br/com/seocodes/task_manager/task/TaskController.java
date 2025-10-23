@@ -64,6 +64,7 @@ public class TaskController {
                     .body("Tarefa não encontrada.");
         }
 
+        // Validação de usuário básica para evitar requisições não autorizadas
         if (!task.getIdUser().equals(idUser)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Usuário não tem permissão para alterar essa tarefa!");
