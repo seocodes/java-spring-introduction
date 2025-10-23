@@ -1,5 +1,6 @@
 package br.com.seocodes.task_manager.task;
 
+import br.com.seocodes.task_manager.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,11 +56,14 @@ public class TaskController {
     public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
         var idUser = request.getAttribute("idUser");
 
-        var task = taskRepository.findById(id);
+        var task = taskRepository.findById(id).orElse(null);
 
-        taskModel.setIdUser((UUID) idUser);
-        taskModel.setId(id);
-        return taskRepository.save(taskModel);
+        // basicamente vai copiar as propriedades não nulas (nesse caso, o que passarmos lá no body da requisição/o que queremos atualizar)
+        // e de resto, deixa como está no banco, pq vai ignorar as propriedades nulas (ver o Utils para entender melhor)
+        // propriedades nulas que me refiro: tudo aquilo que não passarmos na requisição mas existir num taskModel normal
+        Utils.copyNonNullProperties(taskModel, task);
+
+        return taskRepository.save(task);
 
     }
 }

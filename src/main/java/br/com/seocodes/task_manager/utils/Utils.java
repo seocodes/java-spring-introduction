@@ -16,9 +16,9 @@ public class Utils {
     //obs: os métodos são static pra gente não precisar instanciar essa classe para poder usar os métodos
     public static void copyNonNullProperties(Object source, Object target){
 
-        // copia todas as propriedades com o mesmo nome e tipo, exceto as listadas em ignoreProperties (terceiro parametro)
-        // OU SEJA, aquele último parâmetro (getNull) são as propriedades a serem IGNORADAS!!!!
-        // por isso, só vai copiar as Null Properties (nome do metodo né kk)
+        // copia todas as propriedades com o mesmo nome e tipo
+        // EXCETO AS LISTADAS COMO NULAS **ignoreProperties (terceiro parametro)**
+        // OU SEJA, aquele último parâmetro (getNullPropertyNames) são as propriedades a serem IGNORADAS!!! por isso, só vai copiar as NonNullProperties (nome do metodo né kk)
         BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
     }
 
