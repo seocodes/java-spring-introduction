@@ -46,13 +46,17 @@ public class TaskController {
         return taskRepository.findByIdUser((UUID) idUser);
     }
 
+    // PUT = atualiza um recurso completamente, exigindo que todos os campos sejam enviados na requisição
+    //PATCH = atualiza um recurso parcialmente, enviando apenas as alterações necessárias
+
     // /tasks/589439-abshgfdsa-43222 -> id, variável no path/dentro da rota
     // no Spring, usamos o @PathVariable para pegar essa variável/informação do path
-    @PutMapping("/{id}")  // nome da variável que vamos receber - {id} é um parâmetro, o @PathVariable vai substituí-lo pelo o que vai estar no path
+    @PutMapping("/{id}")  // {id} é um parâmetro, o @PathVariable vai substituí-lo pelo o que vai estar no path
     public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
         var idUser = request.getAttribute("idUser");
         taskModel.setIdUser((UUID) idUser);
         taskModel.setId(id);
         return taskRepository.save(taskModel);
+
     }
 }
